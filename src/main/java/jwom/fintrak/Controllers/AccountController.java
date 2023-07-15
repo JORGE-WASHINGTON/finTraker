@@ -1,5 +1,7 @@
 package jwom.fintrak.Controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jwom.fintrak.Controllers.Params.CreateAccountParams;
 import jwom.fintrak.Data.AccountRepository;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ public class AccountController {
     }
 
     @PostMapping
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
     ResponseEntity<CreateAccountParams> createAccount(@RequestBody CreateAccountParams createAccountParams) {
         return ResponseEntity.ok(createAccountParams);
     }
