@@ -2,28 +2,39 @@ package jwom.fintrak.Controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import jwom.fintrak.Controllers.Params.CreateAccountParams;
-import jwom.fintrak.Data.AccountRepository;
+import jwom.fintrak.Controllers.Request.CreateAccountRequest;
+
+import jwom.fintrak.Controllers.Response.CreateAccountResponse;
+import jwom.fintrak.Controllers.Response.RetrieveAccountResponse;
+import jwom.fintrak.Model.User;
+import jwom.fintrak.Services.AccountServiceImpl;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/accounts")
+@RequiredArgsConstructor
+@Slf4j
 public class AccountController {
 
-    private final AccountRepository accountRepository;
-
-    public AccountController(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
-    }
+    private final AccountServiceImpl accountService;
 
     @PostMapping
     @Operation(security = { @SecurityRequirement(name = "bearer-key") })
-    ResponseEntity<CreateAccountParams> createAccount(@RequestBody CreateAccountParams createAccountParams) {
-        return ResponseEntity.ok(createAccountParams);
+    ResponseEntity<CreateAccountResponse> create(@RequestBody CreateAccountRequest request, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.status(HttpStatus.CREATED).body(accountService.create(request, user));
+    }
+
+    @GetMapping("/{accountId}")
+    @Operation(security = { @SecurityRequirement(name = "bearer-key") })
+    ResponseEntity<RetrieveAccountResponse> retrieve(@PathVariable Long accountId, Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(accountService.getAccountById(accountId, user));
     }
 
 
