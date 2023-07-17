@@ -5,9 +5,8 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jwom.fintrak.Model.User;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -19,18 +18,18 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    @Value("${jwt.secret}")
     private final static String SECRET = "e64c2bab8184fd6e0e15b1093d22697b71c5af30018e97c10e06f0e54daa972c";
 
     public String extractUsername(String jwt) {
         return extractClaim(jwt, Claims::getSubject);
     }
 
-    public String generateToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(User userDetails){
+        return generateToken(new HashMap<>(),  userDetails);
     }
 
-    public String generateToken(Map<String, Object> extractClaims, UserDetails userDetails) {
+    public String generateToken(Map<String, Object> extractClaims, User userDetails) {
+
         return Jwts.builder()
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
@@ -40,7 +39,7 @@ public class JwtService {
                 .compact();
     }
 
-    public Boolean isTokenValid(String jwt, UserDetails userDetails) {
+    public Boolean isTokenValid(String jwt, User userDetails) {
         final String username = extractUsername(jwt);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(jwt);
     }
