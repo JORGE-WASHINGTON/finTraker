@@ -1,13 +1,18 @@
 package jwom.fintrak.Model;
 
 import jakarta.persistence.*;
-import jwom.fintrak.Controllers.Params.CreateAccountParams;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,22 +20,25 @@ public class Account {
 
     private String title;
 
-    private String accountType;
+    @Enumerated(EnumType.STRING)
+    private Type accountType;
+
+
+    public enum Type {
+        CASH,
+        BANK,
+        CREDIT_CARD
+    }
 
     private Double balance;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
     private List<Transaction> transactions;
 
-    public void mapFromParams(CreateAccountParams params) {
-        this.title = params.getTitle();
-        this.balance = params.getBalance();
-        this.accountType = params.getAccountType();
-    }
 
 }
 

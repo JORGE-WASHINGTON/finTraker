@@ -3,10 +3,8 @@ package jwom.fintrak.Model;
 import jakarta.persistence.*;
 
 import jwom.fintrak.Auth.Request.RegisterRequest;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.Fetch;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,33 +17,32 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String email;
 
+    @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Account> accounts;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
     public enum Role{
         USER,
         ADMIN
-    }
-
-    public void mapFromParams(RegisterRequest params) {
-        this.name = params.getName();
-        this.email = params.getEmail();
-        this.password = params.getPassword();
     }
 
 
