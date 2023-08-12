@@ -1,14 +1,16 @@
 package jwom.fintrak.Model;
 
 import jakarta.persistence.*;
-
-import jwom.fintrak.Auth.Request.RegisterRequest;
-import lombok.*;
-import org.hibernate.annotations.Fetch;
+import jwom.fintrak.budget.Budget;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -25,7 +27,10 @@ public class User implements UserDetails {
     private Long id;
 
     @Column(nullable = false)
-    private String name;
+    private String firstName;
+
+    @Column(nullable = false)
+    private String lastName;
 
     @Column(nullable = false)
     private String email;
@@ -33,18 +38,22 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<Account> accounts;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<Account> accounts = new ArrayList<Account>();
+
+    @OneToMany
+    @JoinColumn(name = "userId")
+    private List<Budget> budgets = new ArrayList<Budget>();
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public enum Role{
+    public enum Role {
         USER,
         ADMIN
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -75,5 +84,7 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }
 

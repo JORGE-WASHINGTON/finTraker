@@ -33,5 +33,5 @@ public class config {
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
-    };
+    }
 }

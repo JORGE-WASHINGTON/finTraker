@@ -1,4 +1,4 @@
-package jwom.fintrak.Controllers.Response;
+package jwom.fintrak.DTO.response;
 
 import jwom.fintrak.Model.Transaction;
 import lombok.AllArgsConstructor;
@@ -7,13 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateTransactionResponse {
 
-    private long id;
+    private Long id;
 
     private String description;
 
@@ -24,4 +25,8 @@ public class CreateTransactionResponse {
     private Transaction.Type type;
 
     private Long account_id;
+
+    private Double updated_balance;
+
+    private String category;
 }

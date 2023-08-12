@@ -1,5 +1,6 @@
-package jwom.fintrak.Auth.Request;
+package jwom.fintrak.DTO.response;
 
+import jwom.fintrak.DTO.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticateRequest {
-    private String email;
-    private String password;
+public class AuthenticationResponse {
+    private String token;
+    private UserDTO user;
 }

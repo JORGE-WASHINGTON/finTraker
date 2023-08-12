@@ -1,4 +1,4 @@
-package jwom.fintrak.Controllers.Response;
+package jwom.fintrak.DTO.response;
 
 import jwom.fintrak.Model.Account;
 import lombok.AllArgsConstructor;

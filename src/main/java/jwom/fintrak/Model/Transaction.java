@@ -1,14 +1,12 @@
 package jwom.fintrak.Model;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import jakarta.persistence.*;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Data
@@ -20,25 +18,31 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String description;
-
+    @Column(nullable = false)
     private Double amount;
 
+    private String description;
+
+    private Long categoryId;
+
+    @Column(nullable = false)
     private LocalDate date;
 
+    @Column(nullable = false)
+    private Long AccountId;
+
+    @Column(nullable = false)
     private Type type;
 
-    @Column(name = "account_id", insertable = false, updatable = false)
-    private Long accountId;
+    @ManyToOne
+    @JoinColumn(name = "merchantId")
+    private Merchant merchant;
 
     public enum Type {
         EXPENSE,
         INCOME
     }
 
-    @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
 
 }
 
